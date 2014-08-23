@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>match window scroll.js</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js"></script>
+  <script src="matchWindowScroll.js"></script>
+  <style>
+    body, h1, a { margin: 0; color: #fff; }
+    .section { padding: 5%; box-sizing: border-box; }
+    #seen0 { background: #1abc9c; }
+    #seen1 { background: #3498db; }
+    #seen2 { background: #9b59b6; }
+    #seen3 { background: #34495e; }
+    #seen4 { background: #f1c40f; }
+    #lisetenTo { position: fixed; left: 0; top: 0; background: #000; padding: 10px; }
+  </style>
+</head>
+
+<body>
+  <div id="lisetenTo">lisetenToEvent</div>
+  <div id="seen0" class="section">
+    <h1>match window scroll.js</h1>
+    <ol>
+      <li>マウスホイール操作でウィンドウの高さ毎に分けられたブロック毎に上下に自動でスクロールする</li>
+      <li>スクロールが開始時にカスタムイベント 'window.matchScrollStart' が発火</li>
+      <li>スクロールが終了時にカスタムイベント 'window.matchScrollEnd' が発火</li>
+      <li>スクロールバーを動かしても各ブロックまでスクロールする毎に 'window.matchScrollEnd' が発火</li>
+      <li>自動でスクロールさせたくないエリアを id で指定できる</li>
+      <li>現在地の要素を取得できる</li>
+    </ol>
+    <p><a href="#">back to article</a></p>
+  </div>
+
+  <div id="seen1" class="section">#seen1</div>
+  <div id="seen2" class="section">#seen2</div>
+  <div id="seen3" class="section">#seen3</div>
+  <div id="seen4" class="section">#seen4</div>
+
+<script>
+(function() {
+  setTimeout(function() {
+    window.scrollTo(0, 0)
+  }, 1);
+  var mw = matchWindowScroll();
+  $(window).on('matchScrollStart', function() {
+    $('#lisetenTo').text('event : matchScrollStart, count : ' + mw.getCount() + ', element id : #' + mw.getElm().attr('id') );
+  });
+  $(window).on('matchScrollEnd', function() {
+    $('#lisetenTo').text('event : matchScrollEnd, count : ' + mw.getCount() + ', element id : #' + mw.getElm().attr('id') );
+  });
+})();
+</script>
+</body>
+</html>
