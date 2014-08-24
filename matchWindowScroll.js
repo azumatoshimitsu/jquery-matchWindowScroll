@@ -11,15 +11,15 @@ function matchWindowScroll(options) {
   $window.bind('resize', setSize);
 
   $(document).mousewheel( function(e, delta) {
-      e.preventDefault();
-      if( !isAnimation ) {
-        if(delta < 0) {
-          nextSeen();
-        } else {
-          prevSeen();
-        }
+    e.preventDefault();
+    if( !isAnimation ) {
+      if(delta < 0) {
+        nextSeen();
+      } else {
+        prevSeen();
       }
-  } );
+    }
+  });
 
   $window.scroll(function() {
     var current = sectionPos[count];
