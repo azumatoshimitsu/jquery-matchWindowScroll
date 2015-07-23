@@ -23,7 +23,7 @@ function matchWindowScroll(options) {
 
   $window.scroll(function() {
     var current = sectionPos[count];
-    var top = $window.scrollTop();
+    var top = Math.ceil($window.scrollTop());
     var d;
     if(top > current) {
       d = 1;
@@ -50,7 +50,7 @@ function matchWindowScroll(options) {
     $sections.css({height: win.h + 'px'});
     sectionPos = [];
     $sections.each(function(v, i) {
-      sectionPos.push($(this).offset().top);
+      sectionPos.push(Math.ceil($(this).offset().top));
     });
   };
 
