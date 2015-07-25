@@ -17,7 +17,8 @@
     #seen2 { background: #9b59b6; }
     #seen3 { background: #34495e; }
     #seen4 { background: #f1c40f; }
-    #lisetenTo { position: fixed; left: 0; top: 0; background: #000; padding: 10px; }
+    #lisetenTo { position: fixed; left: 0; top: 0; z-index: 100; background: #000; padding: 10px; }
+    footer { text-align: center; color: #000; padding: 50px; }
   </style>
 </head>
 
@@ -42,17 +43,21 @@
   <div id="seen3" class="section">#seen3</div>
   <div id="seen4" class="section">#seen4</div>
 
+  <footer>
+    footer
+  </footer>
+
 <script>
 (function() {
   setTimeout(function() {
     window.scrollTo(0, 0)
   }, 1);
-  var mw = matchWindowScroll();
+  var mw = matchWindowScroll({ hasFooter: true });
   $(window).on('matchScrollStart', function() {
-    $('#lisetenTo').text('event : matchScrollStart, count : ' + mw.getCount() + ', element id : #' + mw.getElm().attr('id') );
+    $('#lisetenTo').text('event : matchScrollStart, count : ' + mw.getCurrent() + ', element id : #' + mw.getElm().attr('id') );
   });
   $(window).on('matchScrollEnd', function() {
-    $('#lisetenTo').text('event : matchScrollEnd, count : ' + mw.getCount() + ', element id : #' + mw.getElm().attr('id') );
+    $('#lisetenTo').text('event : matchScrollEnd, count : ' + mw.getCurrent() + ', element id : #' + mw.getElm().attr('id') );
   });
 })();
 </script>

@@ -1,86 +1,122 @@
-function matchWindowScroll(options) {
+function matchWindowScroll(arg) {
+  var options = arg || {};
   var $window = $(window);
   var $sections = $('.section');
   var len = $sections.length;
   var win = {};
   var isAnimation = false;
   var sectionPos = [];
-  var count = 0;
+  var current = 0;
   var d = ''; 
+  var timer;
+  var wtop = 0;
   //event
   $window.resize(function() {
-    setSize();
+    setState();
   });
 
   $(document).mousewheel( function(e, delta) {
+    if( isLast(delta) ) {
+      return 0;
+    }
     e.preventDefault();
     if( !isAnimation ) {
       if(delta < 0) {
-        nextSeen();
+        current += 1;
       } else {
-        prevSeen();
+        current -= 1;
       }
+      move();
     }
   });
 
   $window.scroll(function() {
-    var current = sectionPos[count];
-    var top = Math.ceil($window.scrollTop());
+    wtop = Math.ceil($window.scrollTop());
+    var current = sectionPos[current];
     var d;
-    if(top > current) {
+    if(wtop > current) {
       d = 1;
     } else {
       d = -1;
     }
-    var dd = count + d;
+    var dd = current + d;
     var temp = 0;
     for(var i = 0; i < len; i += 1) {
-      if( i === dd && d === 1 && top >= sectionPos[dd]) {
-        count = dd;
+      if( i === dd && d === 1 && wtop >= sectionPos[dd]) {
+        current = dd;
         $window.trigger('matchScrollEnd', this);
       }
-      if( i === dd && d === -1 && top <= sectionPos[dd]) {
-        count = dd;
+      if( i === dd && d === -1 && wtop <= sectionPos[dd]) {
+        current = dd;
         $window.trigger('matchScrollEnd', this);
       }
     }
   });
 
   //function
-  var setSize = function() {
+  var setState = function() {
     win = { w: $window.width() , h: $window.height() };
-    $sections.css({height: win.h + 'px'});
-    sectionPos = [];
-    $sections.each(function(v, i) {
-      sectionPos.push(Math.ceil($(this).offset().top));
-    });
 
     windowMatchImage($('#seen1'), 200, 100);
+    
+    if (timer !== false) {
+        clearTimeout(timer);
+    }
+    timer = setTimeout(function() {
+    sectionPos = [];
+    var diff = 10000;
+    var target = undefined;
+    
+    $sections.css({height: win.h + 'px'});
+    $sections.each(function(v, i) {
+      sectionPos.push(Math.ceil($(this).offset().top));
+      target = i;
+    });
+
+    if(target && wtop) {
+      scrollAnimation();
+    }
+    }, 200);
+
   };
 
-  var prevSeen = function() {
-    var temp = count - 1;
-    if(count < 0)
-      return;
-    scrollAnimation(temp);
+  var move = function() {
+    scrollAnimation();
   };
 
-  var nextSeen = function() {
-    var temp = count + 1;
-    if(count > len - 2)
-      return;
-    scrollAnimation(temp);
-  };
+  var scrollAnimation = function() {
+    checkLast();
+    if(current < 0)
+      current = 0;
 
-  var scrollAnimation = function(n) {
     isAnimation = true;
+    var top = sectionPos[current];
+
     $window.trigger('matchScrollStart', this);
-    var top = sectionPos[n];
     $('html, body').animate({ scrollTop: top }, { duration: 400, easing: 'easeOutQuad', complete: function() {
       setTimeout((function() {
         isAnimation = false;
-      }), 600 );
+      }), 1000 );
     }});
+  };
+
+
+  function isLast(delta) {
+    if(options.hasFooter) {
+      return current > len - 1 && delta < 0;
+    } else {
+      return current > len - 1 && delta < 0;
+    }
+  };
+
+  function checkLast() {
+    if(options.hasFooter) {
+      if(current > len)
+        current = len;
+    } else {
+    if(current >= len - 1)
+      current = len - 1;
+    }
   };
 
   //ウィンドウいっぱいに画像を表示
@@ -100,17 +136,17 @@ function matchWindowScroll(options) {
   };
 
   var init = function() {
-    setSize();
+    setState();
   };
 
   init();
 
   return {
-    getCount: function() {
-      return count;
+    getCurrent: function() {
+      return current;
     },
     getElm: function() {
-      return $sections.eq(count);
+      return $sections.eq(current);
     }
   };
 
