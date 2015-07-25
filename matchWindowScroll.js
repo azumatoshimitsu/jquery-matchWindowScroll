@@ -8,7 +8,9 @@ function matchWindowScroll(options) {
   var count = 0;
   var d = ''; 
   //event
-  $window.bind('resize', setSize);
+  $window.resize(function() {
+    setSize();
+  });
 
   $(document).mousewheel( function(e, delta) {
     e.preventDefault();
@@ -52,6 +54,8 @@ function matchWindowScroll(options) {
     $sections.each(function(v, i) {
       sectionPos.push(Math.ceil($(this).offset().top));
     });
+
+    windowMatchImage($('#seen1'), 200, 100);
   };
 
   var prevSeen = function() {
@@ -75,8 +79,24 @@ function matchWindowScroll(options) {
     $('html, body').animate({ scrollTop: top }, { duration: 400, easing: 'easeOutQuad', complete: function() {
       setTimeout((function() {
         isAnimation = false;
-      }), 1000 );
+      }), 600 );
     }});
+  };
+
+  //ウィンドウいっぱいに画像を表示
+  var windowMatchImage = function($warapImage, originalWidth, originalHeight) {
+    var win = { w: $(window).width(), h: $(window).height() };
+    var $images = $warapImage.find('.image');
+    //ウィンドウの幅いっぱいに広がった時の画像の縦横のピクセルを算定
+    var tempSize = { w: win.w, h: win.w * (originalHeight / originalWidth) };
+    if( tempSize.h < win.h ) {//画像のスケールサイズがウィンドウの高さに満たない
+      $images.css( {width: 'auto', height: win.h + 'px'} );
+    } else {
+      $images.css( {width: win.w + 'px', height: 'auto'} );
+    }
+    var img = { w: $images.width(), h: $images.height() };
+    var margin = { top: Math.abs(win.h - img.h) / 2, left: Math.abs(win.w - img.w) / 2 };
+    $images.css( {'margin-top': (margin.top * -1) + 'px', 'margin-left': (margin.left * -1) + 'px'} );
   };
 
   var init = function() {
