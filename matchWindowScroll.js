@@ -32,28 +32,45 @@ function matchWindowScroll(arg) {
 
   $window.scroll(function() {
     wtop = Math.ceil($window.scrollTop());
-    var current = sectionPos[current];
+    var c = sectionPos[current];
     var d;
-    if(wtop > current) {
+    if(wtop > c) {
       d = 1;
     } else {
       d = -1;
     }
-    var dd = current + d;
     var temp = 0;
     for(var i = 0; i < len; i += 1) {
-      if( i === dd && d === 1 && wtop >= sectionPos[dd]) {
-        current = dd;
+      console.log();
+      if( i === current && d === 1 && wtop >= sectionPos[current]) {
         $window.trigger('matchScrollEnd', this);
       }
-      if( i === dd && d === -1 && wtop <= sectionPos[dd]) {
-        current = dd;
+      if( i === current && d === -1 && wtop <= sectionPos[current]) {
         $window.trigger('matchScrollEnd', this);
       }
     }
   });
 
   //function
+  var initState = function() {
+    win = { w: $window.width() , h: $window.height() };
+
+    windowMatchImage($('#seen1'), 200, 100);
+    
+    sectionPos = [];
+    
+    $sections.css({height: win.h + 'px'});
+    $sections.each(function(v, i) {
+      sectionPos.push(Math.ceil($(this).offset().top));
+      target = i;
+    });
+
+    if(target && wtop) {
+      scrollAnimation();
+    }
+
+  };
+
   var setState = function() {
     win = { w: $window.width() , h: $window.height() };
 
@@ -136,7 +153,7 @@ function matchWindowScroll(arg) {
   };
 
   var init = function() {
-    setState();
+    initState();
   };
 
   init();

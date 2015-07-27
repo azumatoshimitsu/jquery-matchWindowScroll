@@ -54,9 +54,11 @@
   }, 1);
   var mw = matchWindowScroll({ hasFooter: true });
   $(window).on('matchScrollStart', function() {
+    console.log('matchScrollStart');
     $('#lisetenTo').text('event : matchScrollStart, count : ' + mw.getCurrent() + ', element id : #' + mw.getElm().attr('id') );
   });
   $(window).on('matchScrollEnd', function() {
+    console.log('matchScrollEnd');
     $('#lisetenTo').text('event : matchScrollEnd, count : ' + mw.getCurrent() + ', element id : #' + mw.getElm().attr('id') );
   });
 })();
