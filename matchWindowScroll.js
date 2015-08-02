@@ -1,4 +1,5 @@
 function matchWindowScroll(arg) {
+
   var options = arg || {};
   var $window = $(window);
   var $sections = $('.section');
@@ -11,10 +12,13 @@ function matchWindowScroll(arg) {
   var timer;
   var wtop = 0;
   //event
+
+  //ウィンドウがリサイズされた場合はプロパティをサイズに合わせて扁壺
   $window.resize(function() {
     setState();
   });
 
+  //マウスホイール操作でセクションを移動
   $(document).mousewheel( function(e, delta) {
     if( isLast(delta) ) {
       return 0;
@@ -26,10 +30,11 @@ function matchWindowScroll(arg) {
       } else {
         current -= 1;
       }
-      move();
+      scrollAnimation();
     }
   });
 
+  //ウィンドウのスクロール量を監視し各セクションのオフセットポジションを超えていれば matchScrollEnd をイベントを発火
   $window.scroll(function() {
     wtop = Math.ceil($window.scrollTop());
     var c = sectionPos[current];
@@ -41,7 +46,6 @@ function matchWindowScroll(arg) {
     }
     var temp = 0;
     for(var i = 0; i < len; i += 1) {
-      console.log();
       if( i === current && d === 1 && wtop >= sectionPos[current]) {
         $window.trigger('matchScrollEnd', this);
       }
@@ -49,16 +53,18 @@ function matchWindowScroll(arg) {
         $window.trigger('matchScrollEnd', this);
       }
     }
+
   });
 
   //function
+  //頁読み込み時にプロパティを初期化し、ウィンドウのスクロール位置を確認
   var initState = function() {
     win = { w: $window.width() , h: $window.height() };
-
     windowMatchImage($('#seen1'), 200, 100);
-    
     sectionPos = [];
-    
+
+    var target = undefined;
+
     $sections.css({height: win.h + 'px'});
     $sections.each(function(v, i) {
       sectionPos.push(Math.ceil($(this).offset().top));
@@ -71,19 +77,14 @@ function matchWindowScroll(arg) {
 
   };
 
+  //ウィンドウリサイズでプロパティを初期化
   var setState = function() {
     win = { w: $window.width() , h: $window.height() };
-
     windowMatchImage($('#seen1'), 200, 100);
-    
-    if (timer !== false) {
-        clearTimeout(timer);
-    }
-    timer = setTimeout(function() {
     sectionPos = [];
-    var diff = 10000;
-    var target = undefined;
     
+    var target = undefined;
+      
     $sections.css({height: win.h + 'px'});
     $sections.each(function(v, i) {
       sectionPos.push(Math.ceil($(this).offset().top));
@@ -93,14 +94,9 @@ function matchWindowScroll(arg) {
     if(target && wtop) {
       scrollAnimation();
     }
-    }, 200);
-
   };
 
-  var move = function() {
-    scrollAnimation();
-  };
-
+  //自動スクロール
   var scrollAnimation = function() {
     checkLast();
     if(current < 0)
@@ -159,9 +155,11 @@ function matchWindowScroll(arg) {
   init();
 
   return {
+    //@return number
     getCurrent: function() {
       return current;
     },
+    //@return DOM
     getElm: function() {
       return $sections.eq(current);
     }
