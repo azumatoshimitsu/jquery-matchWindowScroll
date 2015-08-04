@@ -1,7 +1,6 @@
 function matchWindowScroll(arg) {
 
   var options = arg || {};
-  var $window = $(window);
   var $sections = $('.section');
   var len = $sections.length;
   var win = {};
@@ -14,7 +13,7 @@ function matchWindowScroll(arg) {
   //event
 
   //ウィンドウがリサイズされた場合はプロパティをサイズに合わせて扁壺
-  $window.resize(function() {
+  $(window).resize(function() {
     setState();
   });
 
@@ -35,8 +34,8 @@ function matchWindowScroll(arg) {
   });
 
   //ウィンドウのスクロール量を監視し各セクションのオフセットポジションを超えていれば matchScrollEnd をイベントを発火
-  $window.scroll(function() {
-    wtop = Math.ceil($window.scrollTop());
+  $(window).scroll(function() {
+    wtop = Math.ceil($(window).scrollTop());
     var c = sectionPos[current];
     var d;
     if(wtop > c) {
@@ -47,10 +46,10 @@ function matchWindowScroll(arg) {
     var temp = 0;
     for(var i = 0; i < len; i += 1) {
       if( i === current && d === 1 && wtop >= sectionPos[current]) {
-        $window.trigger('matchScrollEnd', this);
+        $(window).trigger('matchScrollEnd', this);
       }
       if( i === current && d === -1 && wtop <= sectionPos[current]) {
-        $window.trigger('matchScrollEnd', this);
+        $(window).trigger('matchScrollEnd', this);
       }
     }
 
@@ -60,7 +59,7 @@ function matchWindowScroll(arg) {
           clearTimeout(timer);
       }
       timer = setTimeout(function() {
-        $window.trigger('adjustScrollStart', this);
+        $(window).trigger('adjustScrollStart', this);
 
         var diff = 10000;
         var target = undefined;
@@ -82,29 +81,9 @@ function matchWindowScroll(arg) {
   });
 
   //function
-  //頁読み込み時にプロパティを初期化し、ウィンドウのスクロール位置を確認
-  var initState = function() {
-    win = { w: $window.width() , h: $window.height() };
-    windowMatchImage($('#seen1'), 200, 100);
-    sectionPos = [];
-
-    var target = undefined;
-
-    $sections.css({height: win.h + 'px'});
-    $sections.each(function(v, i) {
-      sectionPos.push(Math.ceil($(this).offset().top));
-      target = i;
-    });
-
-    if(target && wtop) {
-      scrollAnimation();
-    }
-
-  };
-
   //ウィンドウリサイズでプロパティを初期化
   var setState = function() {
-    win = { w: $window.width() , h: $window.height() };
+    win = { w: $(window).width() , h: $(window).height() };
     windowMatchImage($('#seen1'), 200, 100);
     sectionPos = [];
     
@@ -130,7 +109,7 @@ function matchWindowScroll(arg) {
     isAnimation = true;
     var top = sectionPos[current];
 
-    $window.trigger('matchScrollStart', this);
+    $(window).trigger('matchScrollStart', this);
     $('html, body').animate({ scrollTop: top }, { duration: 400, easing: 'easeOutQuad', complete: function() {
       setTimeout((function() {
         isAnimation = false;
@@ -174,7 +153,7 @@ function matchWindowScroll(arg) {
   };
 
   var init = function() {
-    initState();
+    setState();
   };
 
   init();
