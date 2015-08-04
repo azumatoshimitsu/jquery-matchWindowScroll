@@ -55,28 +55,28 @@ function matchWindowScroll(arg) {
 
     //スクロールバー操作が完了したら位置を確認してセクションの途中にあったら自動スクロール
     //if(!isAnimation) {
-      if (timer) {
-          clearTimeout(timer);
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function() {
+      $(window).trigger('adjustScrollStart', this);
+
+      var diff = 10000;
+      var target = undefined;
+
+      for(var i = 0; i < len; i+= 1) {
+        var selftop = sectionPos[i];
+        if( Math.abs(wtop - selftop) <  diff ) {
+          diff = wtop - selftop;
+          target = i;
+        }
       }
-      timer = setTimeout(function() {
-        $(window).trigger('adjustScrollStart', this);
-
-        var diff = 10000;
-        var target = undefined;
-
-        for(var i = 0; i < len; i+= 1) {
-          var selftop = sectionPos[i];
-          if( Math.abs(wtop - selftop) <  diff ) {
-            diff = wtop - selftop;
-            target = i;
-          }
-        }
-        //セクションの最下部よりもあれば自動スクロール
-        if(target && wtop < sectionPos[sectionPos.length - 1]) {
-          current = target;
-          scrollAnimation();
-        }
-      }, 200);
+      //セクションの最下部よりもあれば自動スクロール
+      if(target && wtop < sectionPos[sectionPos.length - 1]) {
+        current = target;
+        scrollAnimation();
+      }
+    }, 200);
     //}
   });
 
