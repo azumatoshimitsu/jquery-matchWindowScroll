@@ -7,6 +7,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.min.js"></script>
+  <script src="AddSwipeEvent.js"></script>
   <script src="matchWindowScroll.js"></script>
   <style>
     body, h1, a { margin: 0; color: #fff; }
@@ -31,7 +32,12 @@
 </head>
 
 <body>
-  <div class="lisetenTo"><span id="lisetenTo">lisetenToEvent</span> <span id="adjustScroll"></span></div>
+  <div class="lisetenTo">
+    <span id="lisetenTo">lisetenToEvent</span>
+    <span id="adjustScroll"></span>
+    <span id="swipex"></span>
+    <span id="swipey"></span>
+  </div>
   <div id="seen0" class="section">
     <h1>match window scroll.js</h1>
     <ol>
@@ -83,6 +89,22 @@ mw.getCurrent();
     setTimeout(function() {
       $('#adjustScroll').text('');
     }, 1000);
+  });
+
+  new AddSwipeEvent();
+
+  $(document).on('swipeleft', function(e) {
+    $('#swipex').text('swipeleft');
+  });
+  $(document).on('swiperight', function(e) {
+    $('#swipex').text('swiperight');
+  });
+
+  $(document).on('swipeup', function(e) {
+    $('#swipey').text('swipeup');
+  });
+  $(document).on('swipedown', function(e) {
+    $('#swipey').text('swipedown');
   });
 })();
 </script>

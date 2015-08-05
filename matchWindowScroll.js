@@ -33,6 +33,19 @@ function matchWindowScroll(arg) {
     }
   });
 
+  $(document).on('swipeup', function(e) {
+    if( !isAnimation ) {
+      current += 1;
+      scrollAnimation();
+    }
+  });
+  $(document).on('swipedown', function(e) {
+    if( !isAnimation ) {
+      current -= 1;
+      scrollAnimation();
+    }
+  });
+
   //ウィンドウのスクロール量を監視し各セクションのオフセットポジションを超えていれば matchScrollEnd をイベントを発火
   $(window).scroll(function() {
     wtop = Math.ceil($(window).scrollTop());
@@ -77,6 +90,7 @@ function matchWindowScroll(arg) {
         scrollAnimation();
       }
     }, 200);
+    console.log(current);
     //}
   });
 
